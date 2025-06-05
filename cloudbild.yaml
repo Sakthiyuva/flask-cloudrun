@@ -24,7 +24,7 @@ steps:
   args: [
     'run', 'deploy', 'flask-cloud-run',
     '--image', 'gcr.io/$PROJECT_ID/flask-cloud-run',
-    '--region', 'asia-south1',
+    '--region', 'us-central1',
     '--platform', 'managed',
     '--allow-unauthenticated'
   ]
