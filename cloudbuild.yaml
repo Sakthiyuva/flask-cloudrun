@@ -1,30 +1,28 @@
 steps:
-# Step 1: Build the container image using Google Buildpacks
-- name: 'gcr.io/k8s-skaffold/pack'
-  entrypoint: 'pack'
-  args:
-    - build
-    - 'gcr.io/$PROJECT_ID/flask-cloud-run'
-    - '--builder'
-    - 'gcr.io/buildpacks/builder:v1'
-    - '--path'
-    - '.'
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/flask-cloud-run', '.']
 
-# Step 2: Deploy to Cloud Run
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'gcloud'
-  args:
-    - run
-    - deploy
-    - flask-cloud-run
-    - --image
-    - gcr.io/$PROJECT_ID/flask-cloud-run
-    - --region
-    - us-central1
-    - --platform
-    - managed
-    - --allow-unauthenticated
+  # Step 2: Push Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/flask-cloud-run']
 
-# Use Cloud Logging to avoid GCS logs bucket requirements
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - run
+      - deploy
+      - flask-cloud-run
+      - --image
+      - gcr.io/$PROJECT_ID/flask-cloud-run
+      - --region
+      - us-central1
+      - --platform
+      - managed
+      - --allow-unauthenticated
+      - --quiet
+
 options:
   logging: CLOUD_LOGGING_ONLY
+
