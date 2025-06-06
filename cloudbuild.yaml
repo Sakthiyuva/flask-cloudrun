@@ -1,14 +1,14 @@
 steps:
   # Step 1: Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'Build Docker image'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/flask-cloud-run', '.']
 
   # Step 2: Push Docker image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'push Docker image to container Registry'
     args: ['push', 'gcr.io/$PROJECT_ID/flask-cloud-run']
 
   # Step 3: Deploy to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'Deploy to cloud run'
     entrypoint: 'gcloud'
     args:
       - run
